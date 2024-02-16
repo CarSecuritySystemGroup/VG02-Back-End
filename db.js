@@ -1,6 +1,6 @@
 const { MongoClient } = require('mongodb')
 let dbConnection
-let uri = 'mongodb+srv://Mohib_14:Mariokart8!@cluster0.mu9hzr6.mongodb.net/?retryWrites=true&w=majority'
+let uri = 'mongodb+srv://member:1234@cluster0.mu9hzr6.mongodb.net/?retryWrites=true&w=majority'
 module.exports = {
     connectToDb: (cb) => {
         MongoClient.connect(uri)
