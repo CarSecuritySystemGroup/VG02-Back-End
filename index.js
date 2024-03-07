@@ -28,8 +28,9 @@ app.get('/images/:id', (req, res) => {
             .findOne({ _id: new ObjectId(req.params.id) })
             .then((doc) => {
                 if (doc) {
+                    const binaryData = Buffer.from(doc.data.buffer, 'base64');
                     res.set('Content-Type', 'image/jpeg'); // Set the content type for response
-                    res.status(200).send(doc.data); // Send the image data
+                    res.status(200).send(binaryData); // Send the image data
                 } else {
                     res.status(404).json({ error: 'Image not found' });
                 }
