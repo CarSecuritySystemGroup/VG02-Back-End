@@ -5,8 +5,43 @@ const { ObjectId } = require('mongodb');
 // init app and middleware
 const app = express();
 app.use(express.json());
+app.use(express.raw({ type: 'image/jpeg', limit: '10mb' }));
 
 // routes
+app.post('/images', (req, res) => {
+    const image = req.body; // Access the image data
+    const db = getDb();
+    db.collection('Images')
+        .insertOne({ data: image })
+        .then((result) => {
+            res.status(201).json({ message: 'Image uploaded successfully' });
+        })
+        .catch((err) => {
+            res.status(500).json({ error: 'Could not upload image' });
+        });
+});
+
+app.get('/images/:id', (req, res) => {
+    const db = getDb();
+    if (ObjectId.isValid(req.params.id)) {
+        db.collection('Images')
+            .findOne({ _id: new ObjectId(req.params.id) })
+            .then((doc) => {
+                if (doc) {
+                    res.set('Content-Type', 'image/jpeg'); // Set the content type for response
+                    res.status(200).send(doc.data); // Send the image data
+                } else {
+                    res.status(404).json({ error: 'Image not found' });
+                }
+            })
+            .catch((err) => {
+                res.status(500).json({ error: 'Could not fetch image' });
+            });
+    } else {
+        res.status(400).json({ error: 'Invalid image ID' });
+    }
+});
+
 app.get('/Vehicles', (req, res) => {
     let vehicles = [];
     const db = getDb();
