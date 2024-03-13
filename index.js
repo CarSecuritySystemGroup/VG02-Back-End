@@ -7,9 +7,7 @@ const { ObjectId } = require('mongodb');
 const app = express();
 app.use(express.json());
 app.use(express.raw({ type: 'image/jpeg', limit: '10mb' }));
-app.use(cors({
-    origin: "https://main.d349im6e3dh7dg.amplifyapp.com/"
-}))
+app.use(cors({ origin: "*" }));
 
 // routes
 app.post('/images', (req, res) => {
