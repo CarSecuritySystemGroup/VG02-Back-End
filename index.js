@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors')
 const { connectToDb, getDb } = require('./db');
 const { ObjectId } = require('mongodb');
 
@@ -6,6 +7,7 @@ const { ObjectId } = require('mongodb');
 const app = express();
 app.use(express.json());
 app.use(express.raw({ type: 'image/jpeg', limit: '10mb' }));
+app.use(cors({ origin: "*" }));
 
 // routes
 app.post('/images', (req, res) => {
