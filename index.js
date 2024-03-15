@@ -10,9 +10,13 @@ app.use(express.raw({ type: 'image/jpeg', limit: '10mb' }));
 // routes
 app.post('/images', (req, res) => {
     const image = req.body; // Access the image data
+    const timestamp = new Date();
     const db = getDb();
     db.collection('Images')
-        .insertOne({ data: image })
+        .insertOne({ 
+            data: image,
+            time: timestamp 
+        })
         .then((result) => {
             res.status(201).json({ message: 'Image uploaded successfully' });
         })
