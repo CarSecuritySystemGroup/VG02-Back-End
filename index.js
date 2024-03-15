@@ -12,7 +12,7 @@ app.use(cors({ origin: "*" }));
 // routes
 app.post('/images', (req, res) => {
     const image = req.body; // Access the image data
-    const timestamp = new Date();
+    const timestamp = new Date(); // Timestamp for when image is entered in database
     const db = getDb();
     db.collection('Images')
         .insertOne({ 
