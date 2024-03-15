@@ -13,11 +13,12 @@ app.use(cors({ origin: "*" }));
 app.post('/images', (req, res) => {
     const image = req.body; // Access the image data
     const timestamp = new Date(); // Timestamp for when image is entered in database
+    const timestampEST = new Date(timestamp.toLocaleString('en-US', { timeZone: 'America/New_York' })); // Adjust timestamp to EST
     const db = getDb();
     db.collection('Images')
         .insertOne({ 
             data: image,
-            time: timestamp 
+            time: timestampEST 
         })
         .then((result) => {
             res.status(201).json({ message: 'Image uploaded successfully' });
