@@ -28,28 +28,6 @@ app.post('/images', (req, res) => {
         });
 });
 
-app.get('/images/:id', (req, res) => {
-    const db = getDb();
-    if (ObjectId.isValid(req.params.id)) {
-        db.collection('Images')
-            .findOne({ _id: new ObjectId(req.params.id) })
-            .then((doc) => {
-                if (doc) {
-                    const binaryData = Buffer.from(doc.data.buffer, 'base64');
-                    res.set('Content-Type', 'image/jpeg'); // Set the content type for response
-                    res.status(200).send(binaryData); // Send the image data
-                } else {
-                    res.status(404).json({ error: 'Image not found' });
-                }
-            })
-            .catch((err) => {
-                res.status(500).json({ error: 'Could not fetch image' });
-            });
-    } else {
-        res.status(400).json({ error: 'Invalid image ID' });
-    }
-});
-
 app.get('/images/latest', (req, res) => {
     const db = getDb();
     db.collection('Images')
@@ -70,6 +48,28 @@ app.get('/images/latest', (req, res) => {
         .catch((err) => {
             res.status(500).json({ error: 'Could not fetch the latest image' });
         });
+});
+
+app.get('/images/:id', (req, res) => {
+    const db = getDb();
+    if (ObjectId.isValid(req.params.id)) {
+        db.collection('Images')
+            .findOne({ _id: new ObjectId(req.params.id) })
+            .then((doc) => {
+                if (doc) {
+                    const binaryData = Buffer.from(doc.data.buffer, 'base64');
+                    res.set('Content-Type', 'image/jpeg'); // Set the content type for response
+                    res.status(200).send(binaryData); // Send the image data
+                } else {
+                    res.status(404).json({ error: 'Image not found' });
+                }
+            })
+            .catch((err) => {
+                res.status(500).json({ error: 'Could not fetch image' });
+            });
+    } else {
+        res.status(400).json({ error: 'Invalid image ID' });
+    }
 });
 
 app.get('/Vehicles', (req, res) => {
