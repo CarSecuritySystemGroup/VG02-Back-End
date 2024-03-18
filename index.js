@@ -50,6 +50,28 @@ app.get('/images/:id', (req, res) => {
     }
 });
 
+app.get('/images/latest', (req, res) => {
+    const db = getDb();
+    db.collection('Images')
+        .find()
+        .sort({ time: -1 }) // Sort by timestamp in descending order to get the latest image
+        .limit(1) // Limit to 1 document, which will be the latest image
+        .toArray()
+        .then((docs) => {
+            if (docs.length > 0) {
+                const latestImage = docs[0];
+                const binaryData = Buffer.from(latestImage.data.buffer, 'base64');
+                res.set('Content-Type', 'image/jpeg');
+                res.status(200).send(binaryData);
+            } else {
+                res.status(404).json({ error: 'No images found' });
+            }
+        })
+        .catch((err) => {
+            res.status(500).json({ error: 'Could not fetch the latest image' });
+        });
+});
+
 app.get('/Vehicles', (req, res) => {
     let vehicles = [];
     const db = getDb();
