@@ -116,6 +116,35 @@ app.post('/Vehicles', (req, res) => {
         });
 });
 
+// GET request to retrieve GPS data
+app.get('/gps', (req, res) => {
+    const db = getDb();
+    db.collection('GPS')
+        .find()
+        .toArray()
+        .then((data) => {
+            res.status(200).json(data);
+        })
+        .catch((err) => {
+            res.status(500).json({ error: 'Could not fetch GPS data' });
+        });
+});
+
+// POST request to add new GPS data
+app.post('/gps', (req, res) => {
+    const gpsData = req.body;
+    const db = getDb();
+    db.collection('GPS')
+        .insertOne(gpsData)
+        .then((result) => {
+            res.status(201).json({ message: 'GPS data added successfully' });
+        })
+        .catch((err) => {
+            res.status(500).json({ error: 'Could not add GPS data' });
+        });
+});
+
+
 // db connection and server start
 connectToDb((err) => {
     if (err) {
