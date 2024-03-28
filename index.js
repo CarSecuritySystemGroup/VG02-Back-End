@@ -144,6 +144,33 @@ app.post('/gps', (req, res) => {
         });
 });
 
+// PATCH request to update the security flag
+app.patch('/updateSecurityFlag', (req, res) => {
+    const db = getDb();
+    const { flag } = req.body;
+    const timestamp = new Date();
+    const timestampEST = new Date(timestamp.toLocaleString('en-US', { timeZone: 'America/New_York' }));
+    db.collection('Flags')
+        .updateOne(
+            { flagName: "security_Status" },
+            {
+                $set: {
+                    status: flag,
+                    lastUpdated: timestampEST
+                }
+            }
+        )
+        .then(result => {
+            if (result.modifiedCount === 1) {
+                res.status(200).json({ message: "Flag updated successfully" });
+            } else {
+                res.status(404).json({ message: "Flag not found or no changes made" });
+            }
+        })
+        .catch(err => {
+            res.status(500).json({ error: 'Could not update flag' });
+        });
+});
 
 // db connection and server start
 connectToDb((err) => {
@@ -155,4 +182,3 @@ connectToDb((err) => {
         });
     }
 });
-//work
