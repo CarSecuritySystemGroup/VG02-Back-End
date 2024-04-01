@@ -177,7 +177,7 @@ connectToDb((err) => {
     if (err) {
         console.error('Error connecting to MongoDB:', err);
     } else {
-        app.listen(3000, () => {
+        app.listen(process.env.PORT || 3000, () => {
             console.log('App listening on port 3000');
         });
     }
