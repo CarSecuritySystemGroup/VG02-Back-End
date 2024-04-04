@@ -70,6 +70,30 @@ app.get('/images/latest/timestamp', (req, res) => {
         });
 });
 
+app.get('/images/latest-three', (req, res) => {
+    const db = getDb();
+    db.collection('Images')
+        .find({}, { projection: { _id: 1, time: 1 } }) // Project only the _id and time fields
+        .sort({ time: -1 }) // Sort by timestamp in descending order to get the latest images
+        .limit(3) // Limit to 3 documents to get the 3 latest images
+        .toArray()
+        .then((docs) => {
+            if (docs.length > 0) {
+                const latestImagesInfo = docs.map(doc => ({
+                    id: doc._id,
+                    timestamp: doc.time
+                }));
+                res.status(200).json(latestImagesInfo);
+            } else {
+                res.status(404).json({ error: 'No images found' });
+            }
+        })
+        .catch((err) => {
+            res.status(500).json({ error: 'Could not fetch the latest images info' });
+        });
+});
+
+
 
 app.get('/images/:id', (req, res) => {
     const db = getDb();
